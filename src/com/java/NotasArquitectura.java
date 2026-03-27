@@ -1,5 +1,6 @@
 package com.java;
 
+
 public class NotasArquitectura {
     // Proyecto pensado para Java 17/21 (LTS actuales). No hay build tool aqui,
     // pero el codigo y las notas asumen esas versiones modernas.
