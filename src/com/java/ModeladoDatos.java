@@ -1,6 +1,11 @@
 package com.java;
 
 public class ModeladoDatos{
+public static void main(String[] args) {
+    EmpresaR empresa = new EmpresaR("Stiven S.A.", "1234567-1", 2026);
+    System.out.println("Empresa: " + empresa.nombre() + ", NIT: " + empresa.nit() + ", Fundada: " + empresa.anoFundacion());
+    
+
     //definiendo los atributos (variables de instancia) de la clase Empleado
     class Empleado{
     private byte tipoByte;
@@ -34,5 +39,12 @@ public class ModeladoDatos{
     public char getTipoChar() { return tipoChar; }
     public boolean isTipoBoolean() { return tipoBoolean; }
     public String getNombre() { return nombre; }
+
+
+
 } 
+
 }
+}
+record EmpresaR(String nombre, String nit, int anoFundacion) {}
+
