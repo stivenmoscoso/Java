@@ -99,3 +99,28 @@ public class NotasArquitectura {
         System.out.println(banner);
     }
 }
+
+/*
+ * Comparación entre clase tradicional y record
+ *
+ * La clase tradicional es más verbosa porque requiere:
+ * - atributos privados
+ * - constructor
+ * - getters
+ * - toString()
+ * - equals()
+ * - hashCode()
+ *
+ * En cambio, el record reduce todo esto a una sola línea,
+ * haciendo el código más limpio, legible y mantenible.
+ *
+ * Además, un record es inmutable por naturaleza:
+ * una vez creado el objeto, sus valores no pueden cambiar.
+ *
+ * Esto mejora:
+ * - seguridad de datos
+ * - claridad del modelo
+ * - menos errores por modificación accidental
+ *
+ * Ideal para DTOs, respuestas API y modelos de solo lectura en Spring Boot.
+ */
