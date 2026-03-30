@@ -51,6 +51,19 @@ public class ModeladoDatos {
             public boolean isTipoBoolean() { return tipoBoolean; }
             public String getNombre() { return nombre; }
         }
+
+        Empleado empleado = new Empleado(
+                (byte) 10,
+                (short) 3000,
+                450000,
+                9000000000L,
+                3.14f,
+                1500.75,
+                'A',
+                true,
+                "Stiven Moscoso"
+        );
+        System.out.println("Empleado: " + empleado.getNombre() + ", Int: " + empleado.getTipoInt() + ", Boolean: " + empleado.isTipoBoolean());
     }
 
     /*
