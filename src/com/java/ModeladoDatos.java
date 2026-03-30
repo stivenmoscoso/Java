@@ -29,7 +29,7 @@ public class ModeladoDatos {
             private boolean tipoBoolean;
             private String nombre;
 
-        public Empleado(byte tipoByte, short tipoShort, int tipoInt, long tipoLong, float tipoFloat, double tipoDouble, char tipoChar, boolean tipoBoolean, String nombre) {
+            public Empleado(byte tipoByte, short tipoShort, int tipoInt, long tipoLong, float tipoFloat, double tipoDouble, char tipoChar, boolean tipoBoolean, String nombre) {
                 this.tipoByte = tipoByte;
                 this.tipoShort = tipoShort;
                 this.tipoInt = tipoInt;
@@ -61,9 +61,21 @@ public class ModeladoDatos {
                 1500.75,
                 'A',
                 true,
-                "Stiven Moscoso"
+                null
         );
         System.out.println("Empleado: " + empleado.getNombre() + ", Int: " + empleado.getTipoInt() + ", Boolean: " + empleado.isTipoBoolean());
+
+        try {
+            int largoNombre = empleado.getNombre().length();
+            System.out.println("Largo del nombre: " + largoNombre);
+        } catch (NullPointerException ex) {
+            System.out.println("Se produjo NullPointerException al usar el nombre del empleado.");
+        }
+
+        String textoA = new String("Hola");
+        String textoB = new String("Hola");
+        System.out.println("Comparacion con == : " + (textoA == textoB));
+        System.out.println("Comparacion con equals: " + textoA.equals(textoB));
     }
 
     /*
