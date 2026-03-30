@@ -2,6 +2,13 @@ package com.java;
 
 public class ModeladoDatos{
 public static void main(String[] args) {
+    String encabezado = """
+    ==============================================
+    MODELADO DE DATOS PRUEBA Stiven Moscoso
+    ==============================================""";
+
+    System.out.println(encabezado);
+    
     EmpresaR empresa = new EmpresaR("Stiven S.A.", "1234567-1", 2026);
     System.out.println("Empresa: " + empresa.nombre() + ", NIT: " + empresa.nit() + ", Fundada: " + empresa.anoFundacion());
     
