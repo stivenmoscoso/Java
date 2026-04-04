@@ -4,6 +4,15 @@ import java.util.Scanner;
 
 public class ControlFlujo {
 
+    public static String obtenerCategoriaSalarial(int nivelSalarial) {
+        return switch (nivelSalarial) {
+            case 1 -> "Salario bajo";
+            case 2 -> "Salario medio";
+            case 3 -> "Salario alto";
+            default -> "Categoria salarial no valida";
+        };
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean salir = false;
