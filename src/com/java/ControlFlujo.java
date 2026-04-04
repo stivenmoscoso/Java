@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 public class ControlFlujo {
 
+    // En Java 8, el switch clasico usa break y existe el riesgo de "fall-through"
+    // si se olvida un break entre casos. En Java 17/21, la switch expression con
+    // -> es mas segura y mas breve, porque evita ese error por defecto.
     public static String obtenerCategoriaSalarial(int nivelSalarial) {
         return switch (nivelSalarial) {
             case 1 -> "Salario bajo";
