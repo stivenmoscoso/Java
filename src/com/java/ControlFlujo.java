@@ -39,19 +39,19 @@ public class ControlFlujo {
         for (var i = 0; i < EMPLEADOS.length; i++) {
             var suma = 0.0;
 
+            System.out.println("Coder: " + EMPLEADOS[i]);
+            System.out.println("Calificaciones trimestrales: ");
+
+            // Los for anidados permiten recorrer la matriz fila por fila
+            // y calcular el promedio de desempeno de cada empleado.
             for (var j = 0; j < CALIFICACIONES_TRIMESTRALES[i].length; j++) {
-                suma += CALIFICACIONES_TRIMESTRALES[i][j];
+                var calificacion = CALIFICACIONES_TRIMESTRALES[i][j];
+                suma += calificacion;
+                System.out.println("Trimestre " + (j + 1) + ": " + calificacion);
             }
 
             var promedio = suma / CALIFICACIONES_TRIMESTRALES[i].length;
             var promedioEntero = (int) promedio;
-
-            System.out.println("Coder: " + EMPLEADOS[i]);
-            System.out.println("Calificaciones trimestrales: ");
-
-            for (var j = 0; j < CALIFICACIONES_TRIMESTRALES[i].length; j++) {
-                System.out.println("Trimestre " + (j + 1) + ": " + CALIFICACIONES_TRIMESTRALES[i][j]);
-            }
 
             System.out.println("Promedio general: " + promedio);
             System.out.println("Promedio convertido a entero con casting: " + promedioEntero);
