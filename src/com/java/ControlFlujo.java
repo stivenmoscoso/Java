@@ -16,6 +16,18 @@ public class ControlFlujo {
         };
     }
 
+    public static String validarRangoTipoPrimitivo(long valor) {
+        if (valor >= Byte.MIN_VALUE && valor <= Byte.MAX_VALUE) {
+            return "El valor cabe en byte, short, int y long.";
+        } else if (valor >= Short.MIN_VALUE && valor <= Short.MAX_VALUE) {
+            return "El valor cabe en short, int y long.";
+        } else if (valor >= Integer.MIN_VALUE && valor <= Integer.MAX_VALUE) {
+            return "El valor cabe en int y long.";
+        } else {
+            return "El valor solo cabe en long.";
+        }
+    }
+
     public static void main(String[] args) {
         var scanner = new Scanner(System.in);
         boolean salir = false;
@@ -55,6 +67,21 @@ public class ControlFlujo {
             };
 
             System.out.println(accion);
+
+            if (opcion == 2) {
+                System.out.print("Ingrese un numero entero para validar su rango: ");
+                var datoCapturado = scanner.nextLine();
+
+                try {
+                    var valor = Long.parseLong(datoCapturado);
+                    System.out.println(validarRangoTipoPrimitivo(valor));
+                } catch (NumberFormatException e) {
+                    System.out.println("El dato ingresado no corresponde a un valor long valido.");
+                }
+            } else if (opcion < 0 || opcion > 4) {
+                System.out.println("La opcion debe estar entre 0 y 4.");
+            }
+
             salir = opcion == 0;
 
             System.out.println();
