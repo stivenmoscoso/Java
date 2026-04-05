@@ -17,10 +17,10 @@ public class ControlFlujo {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         boolean salir = false;
 
-        while (!salir) {
+        do {
             System.out.println("=== Menu Principal ===");
             System.out.println("1. Registrar usuario");
             System.out.println("2. Consultar datos");
@@ -29,12 +29,13 @@ public class ControlFlujo {
             System.out.println("0. Salir");
             System.out.print("Seleccione una opcion: ");
 
+            var entrada = scanner.nextLine();
             int opcion;
-            if (scanner.hasNextInt()) {
-                opcion = scanner.nextInt();
-            } else {
+
+            try {
+                opcion = Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
                 System.out.println("Entrada invalida. Debe ingresar un numero.");
-                scanner.nextLine();
                 continue;
             }
 
@@ -61,7 +62,7 @@ public class ControlFlujo {
             }
 
             System.out.println();
-        }
+        } while (!salir);
 
         scanner.close();
     }
