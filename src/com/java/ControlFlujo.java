@@ -4,6 +4,13 @@ import java.util.Scanner;
 
 public class ControlFlujo {
 
+    static final String[] EMPLEADOS = {"Ana", "Luis", "Marta"};
+    static final double[][] CALIFICACIONES_TRIMESTRALES = {
+        {4.5, 4.7, 4.8},
+        {3.9, 4.1, 4.0},
+        {4.9, 4.6, 4.7}
+    };
+
     // En Java 8, el switch clasico usa break y existe el riesgo de "fall-through"
     // si se olvida un break entre casos. En Java 17/21, la switch expression con
     // -> es mas segura y mas breve, porque evita ese error por defecto.
@@ -25,6 +32,30 @@ public class ControlFlujo {
             return "El valor cabe en int y long.";
         } else {
             return "El valor solo cabe en long.";
+        }
+    }
+
+    public static void mostrarReporteDesempeno() {
+        for (var i = 0; i < EMPLEADOS.length; i++) {
+            var suma = 0.0;
+
+            for (var j = 0; j < CALIFICACIONES_TRIMESTRALES[i].length; j++) {
+                suma += CALIFICACIONES_TRIMESTRALES[i][j];
+            }
+
+            var promedio = suma / CALIFICACIONES_TRIMESTRALES[i].length;
+            var promedioEntero = (int) promedio;
+
+            System.out.println("Coder: " + EMPLEADOS[i]);
+            System.out.println("Calificaciones trimestrales: ");
+
+            for (var j = 0; j < CALIFICACIONES_TRIMESTRALES[i].length; j++) {
+                System.out.println("Trimestre " + (j + 1) + ": " + CALIFICACIONES_TRIMESTRALES[i][j]);
+            }
+
+            System.out.println("Promedio general: " + promedio);
+            System.out.println("Promedio convertido a entero con casting: " + promedioEntero);
+            System.out.println();
         }
     }
 
@@ -78,6 +109,8 @@ public class ControlFlujo {
                 } catch (NumberFormatException e) {
                     System.out.println("El dato ingresado no corresponde a un valor long valido.");
                 }
+            } else if (opcion == 3) {
+                mostrarReporteDesempeno();
             } else if (opcion < 0 || opcion > 4) {
                 System.out.println("La opcion debe estar entre 0 y 4.");
             }
