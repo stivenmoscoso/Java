@@ -54,9 +54,11 @@ public class ControlFlujo {
             // Casting explicito de double a int para generar un "Puntaje Simplificado".
             // Se pierde la parte decimal, por lo que disminuye la precision del valor original.
             var puntajeSimplificado = (int) promedio;
+            var estadoPromocion = promedio >= 4.5 ? "Promovible" : "En seguimiento";
 
             System.out.println("Promedio general: " + promedio);
             System.out.println("Puntaje Simplificado (casting de double a int): " + puntajeSimplificado);
+            System.out.println("Estado de promocion: " + estadoPromocion);
             System.out.println();
         }
     }
@@ -83,6 +85,9 @@ public class ControlFlujo {
             try {
                 opcion = Integer.parseInt(entrada);
             } catch (NumberFormatException e) {
+                // En Java 8 los mensajes de error y rastros de excepcion solian ser menos
+                // descriptivos. En Java 17/21 se mejoro el detalle diagnostico, lo que
+                // facilita identificar con mas rapidez la causa exacta del problema.
                 System.out.println("Entrada invalida. Debe ingresar un numero.");
                 continue;
             }
