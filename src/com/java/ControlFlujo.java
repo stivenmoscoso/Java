@@ -29,6 +29,9 @@ public class ControlFlujo {
             System.out.println("0. Salir");
             System.out.print("Seleccione una opcion: ");
 
+            // En Java 8 se declararia de forma explicita:
+            // String entrada = scanner.nextLine();
+            // En Java 11+, var reduce ruido sin perder claridad.
             var entrada = scanner.nextLine();
             int opcion;
 
@@ -39,27 +42,20 @@ public class ControlFlujo {
                 continue;
             }
 
-            switch (opcion) {
-                case 1:
-                    System.out.println("Accion: Registrar usuario.");
-                    break;
-                case 2:
-                    System.out.println("Accion: Consultar datos.");
-                    break;
-                case 3:
-                    System.out.println("Accion: Generar reporte.");
-                    break;
-                case 4:
-                    System.out.println("Accion: Configuracion.");
-                    break;
-                case 0:
-                    System.out.println("Saliendo del sistema...");
-                    salir = true;
-                    break;
-                default:
-                    System.out.println("Opcion no valida. Intente de nuevo.");
-                    break;
-            }
+            // Otra comparacion:
+            // Java 8: String accion = ...;
+            // Java 11+: var accion = ...;
+            var accion = switch (opcion) {
+                case 1 -> "Accion: Registrar usuario.";
+                case 2 -> "Accion: Consultar datos.";
+                case 3 -> "Accion: Generar reporte.";
+                case 4 -> "Accion: Configuracion.";
+                case 0 -> "Saliendo del sistema...";
+                default -> "Opcion no valida. Intente de nuevo.";
+            };
+
+            System.out.println(accion);
+            salir = opcion == 0;
 
             System.out.println();
         } while (!salir);
