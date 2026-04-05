@@ -51,10 +51,12 @@ public class ControlFlujo {
             }
 
             var promedio = suma / CALIFICACIONES_TRIMESTRALES[i].length;
-            var promedioEntero = (int) promedio;
+            // Casting explicito de double a int para generar un "Puntaje Simplificado".
+            // Se pierde la parte decimal, por lo que disminuye la precision del valor original.
+            var puntajeSimplificado = (int) promedio;
 
             System.out.println("Promedio general: " + promedio);
-            System.out.println("Promedio convertido a entero con casting: " + promedioEntero);
+            System.out.println("Puntaje Simplificado (casting de double a int): " + puntajeSimplificado);
             System.out.println();
         }
     }
