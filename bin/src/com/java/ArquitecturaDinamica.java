@@ -2,6 +2,8 @@ package com.java;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ArquitecturaDinamica {
@@ -12,6 +14,14 @@ public class ArquitecturaDinamica {
         new Empleado("COD002", "Luis", new ArrayList<>(Arrays.asList(3.9, 4.1, 4.0))),
         new Empleado("COD003", "Marta", new ArrayList<>(Arrays.asList(4.9, 4.6, 4.7)))
     ));
+    // Java 9 introdujo metodos de factoria para crear listas inmutables de forma breve.
+    static final List<String> TECNOLOGIAS = List.of("Java", "Spring", "SQL", "Git");
+    // Map.of permite inicializar sedes fijas del sistema como un mapa inmutable.
+    static final Map<String, String> SEDES = Map.of(
+        "BOG", "Bogota",
+        "MED", "Medellin",
+        "CAL", "Cali"
+    );
     // El HashMap permite ubicar un coder por su ID.
     static final HashMap<String, Empleado> EMPLEADOS_POR_ID = crearIndiceEmpleados();
 
@@ -164,6 +174,10 @@ public class ArquitecturaDinamica {
     }
 
     public static void mostrarReporteDesempeno() {
+        System.out.println("Tecnologias base: " + TECNOLOGIAS);
+        System.out.println("Sedes disponibles: " + SEDES);
+        System.out.println();
+
         // El foreach recorre directamente la lista dinamica de empleados.
         for (var empleado : EMPLEADOS) {
             var suma = 0.0;
