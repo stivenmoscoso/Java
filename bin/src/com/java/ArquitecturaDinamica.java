@@ -14,9 +14,12 @@ public class ArquitecturaDinamica {
         new Empleado("COD002", "Luis", new ArrayList<>(Arrays.asList(3.9, 4.1, 4.0))),
         new Empleado("COD003", "Marta", new ArrayList<>(Arrays.asList(4.9, 4.6, 4.7)))
     ));
-    // Java 9 introdujo metodos de factoria para crear listas inmutables de forma breve.
+    // List.of() crea una lista inmutable mas segura que un ArrayList tradicional para datos fijos,
+    // porque evita modificaciones accidentales desde otras partes del programa. Como es inmutable,
+    // no permite operaciones como .add(), .remove() o .set().
     static final List<String> TECNOLOGIAS = List.of("Java", "Spring", "SQL", "Git");
-    // Map.of permite inicializar sedes fijas del sistema como un mapa inmutable.
+    // Map.of tambien crea un mapa inmutable, ideal para sedes fijas que no deben alterarse
+    // durante la ejecucion del sistema.
     static final Map<String, String> SEDES = Map.of(
         "BOG", "Bogota",
         "MED", "Medellin",
