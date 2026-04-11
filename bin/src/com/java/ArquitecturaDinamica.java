@@ -46,6 +46,8 @@ public class ArquitecturaDinamica {
         var indice = new HashMap<String, Empleado>();
 
         // Se construye una tabla clave-valor para acceder al empleado por ID.
+        // Con Java 11+, var evita escribir "Empleado empleado" en cada iteracion,
+        // mientras que en Java 8 se declaraba el tipo de forma explicita.
         for (var empleado : EMPLEADOS) {
             indice.put(empleado.id, empleado);
         }
@@ -105,6 +107,8 @@ public class ArquitecturaDinamica {
         // Se recorre la coleccion principal para mostrar todos los coders activos.
         System.out.println("=== Lista de coders ===");
 
+        // En Java 11+, var simplifica el foreach frente a la sintaxis explicita
+        // de Java 8: for (Empleado empleado : EMPLEADOS).
         for (var empleado : EMPLEADOS) {
             System.out.println("ID: " + empleado.id + " | Nombre: " + empleado.nombre);
         }
@@ -215,6 +219,8 @@ public class ArquitecturaDinamica {
     public static double calcularPromedio(Empleado empleado) {
         var suma = 0.0;
 
+        // Con var, el tipo Double se infiere automaticamente en el recorrido.
+        // En Java 8 solia escribirse: for (Double calificacion : ...).
         for (var calificacion : empleado.calificacionesTrimestrales) {
             suma += calificacion;
         }
@@ -233,6 +239,8 @@ public class ArquitecturaDinamica {
             // removeIf aplica un filtrado funcional sobre la coleccion y elimina
             // a los empleados cuyo promedio no alcanza el minimo indicado.
             EMPLEADOS.removeIf(empleado -> {
+                // var tambien reduce ruido en pequeñas transformaciones intermedias.
+                // En Java 8 se habria escrito: double promedio = calcularPromedio(empleado).
                 var promedio = calcularPromedio(empleado);
                 var eliminar = promedio < puntajeMinimo;
 
@@ -256,6 +264,7 @@ public class ArquitecturaDinamica {
         System.out.println();
 
         // El foreach recorre directamente la lista dinamica de empleados.
+        // Aqui var vuelve mas compacta la iteracion sin perder claridad del contexto.
         for (var empleado : EMPLEADOS) {
             System.out.println("ID: " + empleado.id);
             System.out.println("Coder: " + empleado.nombre);
