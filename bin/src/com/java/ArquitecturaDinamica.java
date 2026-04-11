@@ -108,6 +108,25 @@ public class ArquitecturaDinamica {
         for (var empleado : EMPLEADOS) {
             System.out.println("ID: " + empleado.id + " | Nombre: " + empleado.nombre);
         }
+
+        mostrarExtremosDeLaLista();
+    }
+
+    public static void mostrarExtremosDeLaLista() {
+        if (EMPLEADOS.isEmpty()) {
+            return;
+        }
+
+        // En Java 21, las sequenced collections mejoran el manejo del orden en listas.
+        // Por eso podemos usar getFirst() y getLast() para leer el primer y ultimo coder
+        // de forma mas clara que en Java 8/11, donde era necesario usar
+        // get(0) y get(size() - 1).
+        var primerEmpleado = EMPLEADOS.getFirst();
+        var ultimoEmpleado = EMPLEADOS.getLast();
+
+        System.out.println();
+        System.out.println("Primer coder: " + primerEmpleado.id + " | " + primerEmpleado.nombre);
+        System.out.println("Ultimo coder: " + ultimoEmpleado.id + " | " + ultimoEmpleado.nombre);
     }
 
     public static ArrayList<Double> capturarCalificaciones(Scanner scanner) {
