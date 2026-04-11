@@ -110,6 +110,7 @@ public class ArquitecturaDinamica {
         }
 
         mostrarExtremosDeLaLista();
+        mostrarEmpleadosEnOrdenInverso();
     }
 
     public static void mostrarExtremosDeLaLista() {
@@ -117,16 +118,32 @@ public class ArquitecturaDinamica {
             return;
         }
 
-        // En Java 21, las sequenced collections mejoran el manejo del orden en listas.
+        // En Java 21, las sequenced collections mejoran la legibilidad al trabajar con orden.
         // Por eso podemos usar getFirst() y getLast() para leer el primer y ultimo coder
-        // de forma mas clara que en Java 8/11, donde era necesario usar
-        // get(0) y get(size() - 1).
+        // sin depender de indices manuales como get(0) y get(size() - 1), lo que tambien
+        // ayuda a prevenir errores de indice.
         var primerEmpleado = EMPLEADOS.getFirst();
         var ultimoEmpleado = EMPLEADOS.getLast();
 
         System.out.println();
         System.out.println("Primer coder: " + primerEmpleado.id + " | " + primerEmpleado.nombre);
         System.out.println("Ultimo coder: " + ultimoEmpleado.id + " | " + ultimoEmpleado.nombre);
+    }
+
+    public static void mostrarEmpleadosEnOrdenInverso() {
+        if (EMPLEADOS.isEmpty()) {
+            return;
+        }
+
+        // reversed() entrega una vista en orden inverso de la coleccion sin escribir
+        // algoritmos manuales de recorrido, lo que hace el codigo mas claro y reduce
+        // errores al manipular posiciones.
+        System.out.println();
+        System.out.println("=== Coders en orden inverso ===");
+
+        for (var empleado : EMPLEADOS.reversed()) {
+            System.out.println("ID: " + empleado.id + " | Nombre: " + empleado.nombre);
+        }
     }
 
     public static ArrayList<Double> capturarCalificaciones(Scanner scanner) {
