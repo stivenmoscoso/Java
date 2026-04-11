@@ -10,9 +10,9 @@ public class ArquitecturaDinamica {
     // Ahora se modela con una coleccion dinamica de empleados
     // en lugar de arreglos fijos.
     static final ArrayList<Empleado> EMPLEADOS = new ArrayList<>(Arrays.asList(
-        new Empleado("COD001", "Ana", new ArrayList<>(Arrays.asList(4.5, 4.7, 4.8))),
-        new Empleado("COD002", "Luis", new ArrayList<>(Arrays.asList(3.9, 4.1, 4.0))),
-        new Empleado("COD003", "Marta", new ArrayList<>(Arrays.asList(4.9, 4.6, 4.7)))
+        new Empleado("COD001", "Ana", 4200.0, new ArrayList<>(Arrays.asList(4.5, 4.7, 4.8))),
+        new Empleado("COD002", "Luis", 3500.0, new ArrayList<>(Arrays.asList(3.9, 4.1, 4.0))),
+        new Empleado("COD003", "Marta", 5100.0, new ArrayList<>(Arrays.asList(4.9, 4.6, 4.7)))
     ));
     // List.of() crea una lista inmutable mas segura que un ArrayList tradicional para datos fijos,
     // porque evita modificaciones accidentales desde otras partes del programa. Como es inmutable,
@@ -33,11 +33,13 @@ public class ArquitecturaDinamica {
         // El ID funciona como clave unica para localizar al coder en el HashMap.
         String id;
         String nombre;
+        double salario;
         ArrayList<Double> calificacionesTrimestrales;
 
-        Empleado(String id, String nombre, ArrayList<Double> calificacionesTrimestrales) {
+        Empleado(String id, String nombre, double salario, ArrayList<Double> calificacionesTrimestrales) {
             this.id = id;
             this.nombre = nombre;
+            this.salario = salario;
             this.calificacionesTrimestrales = calificacionesTrimestrales;
         }
     }
@@ -71,6 +73,7 @@ public class ArquitecturaDinamica {
         System.out.println("Coder encontrado:");
         System.out.println("ID: " + empleado.id);
         System.out.println("Nombre: " + empleado.nombre);
+        System.out.println("Salario: " + empleado.salario);
         System.out.println("Calificaciones trimestrales: " + empleado.calificacionesTrimestrales);
     }
 
@@ -110,7 +113,7 @@ public class ArquitecturaDinamica {
         // En Java 11+, var simplifica el foreach frente a la sintaxis explicita
         // de Java 8: for (Empleado empleado : EMPLEADOS).
         for (var empleado : EMPLEADOS) {
-            System.out.println("ID: " + empleado.id + " | Nombre: " + empleado.nombre);
+            System.out.println("ID: " + empleado.id + " | Nombre: " + empleado.nombre + " | Salario: " + empleado.salario);
         }
 
         mostrarExtremosDeLaLista();
@@ -194,9 +197,20 @@ public class ArquitecturaDinamica {
             return;
         }
 
+        System.out.print("Ingrese el salario del coder: ");
+        var entradaSalario = scanner.nextLine().trim();
+        double salario;
+
+        try {
+            salario = Double.parseDouble(entradaSalario);
+        } catch (NumberFormatException e) {
+            System.out.println("El salario debe ser un numero decimal valido.");
+            return;
+        }
+
         // Se construye el objeto y luego se registra en la lista y el mapa.
         var calificaciones = capturarCalificaciones(scanner);
-        var empleado = new Empleado(id, nombre, calificaciones);
+        var empleado = new Empleado(id, nombre, salario, calificaciones);
 
         if (agregarEmpleado(empleado)) {
             System.out.println("Coder registrado correctamente.");
@@ -268,6 +282,7 @@ public class ArquitecturaDinamica {
         for (var empleado : EMPLEADOS) {
             System.out.println("ID: " + empleado.id);
             System.out.println("Coder: " + empleado.nombre);
+            System.out.println("Salario: " + empleado.salario);
             System.out.println("Calificaciones trimestrales: ");
 
             // Los for anidados permiten recorrer la matriz fila por fila
@@ -288,6 +303,28 @@ public class ArquitecturaDinamica {
             System.out.println("Estado de promocion: " + estadoPromocion);
             System.out.println();
         }
+
+        mostrarReporteFinalSalarios();
+    }
+
+    public static void mostrarReporteFinalSalarios() {
+        if (EMPLEADOS.isEmpty()) {
+            System.out.println("Reporte final: no hay empleados registrados.");
+            return;
+        }
+
+        var totalEmpleados = EMPLEADOS.size();
+        var sumaSalarios = 0.0;
+
+        for (var empleado : EMPLEADOS) {
+            sumaSalarios += empleado.salario;
+        }
+
+        var promedioSalarios = sumaSalarios / totalEmpleados;
+
+        System.out.println("=== Reporte Final ===");
+        System.out.println("Total de empleados: " + totalEmpleados);
+        System.out.println("Promedio de salarios: " + promedioSalarios);
     }
 
     public static void main(String[] args) {
