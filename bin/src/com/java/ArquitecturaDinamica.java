@@ -212,6 +212,44 @@ public class ArquitecturaDinamica {
         }
     }
 
+    public static double calcularPromedio(Empleado empleado) {
+        var suma = 0.0;
+
+        for (var calificacion : empleado.calificacionesTrimestrales) {
+            suma += calificacion;
+        }
+
+        return suma / empleado.calificacionesTrimestrales.size();
+    }
+
+    public static void depurarEmpleadosPorPuntajeMinimo(Scanner scanner) {
+        System.out.print("Ingrese el puntaje promedio minimo requerido: ");
+        var entrada = scanner.nextLine().trim();
+
+        try {
+            var puntajeMinimo = Double.parseDouble(entrada);
+            var cantidadAntes = EMPLEADOS.size();
+
+            // removeIf aplica un filtrado funcional sobre la coleccion y elimina
+            // a los empleados cuyo promedio no alcanza el minimo indicado.
+            EMPLEADOS.removeIf(empleado -> {
+                var promedio = calcularPromedio(empleado);
+                var eliminar = promedio < puntajeMinimo;
+
+                if (eliminar) {
+                    EMPLEADOS_POR_ID.remove(empleado.id);
+                }
+
+                return eliminar;
+            });
+
+            var eliminados = cantidadAntes - EMPLEADOS.size();
+            System.out.println("Coders eliminados por puntaje minimo: " + eliminados);
+        } catch (NumberFormatException e) {
+            System.out.println("Debe ingresar un numero decimal valido.");
+        }
+    }
+
     public static void mostrarReporteDesempeno() {
         System.out.println("Tecnologias base: " + TECNOLOGIAS);
         System.out.println("Sedes disponibles: " + SEDES);
@@ -219,8 +257,6 @@ public class ArquitecturaDinamica {
 
         // El foreach recorre directamente la lista dinamica de empleados.
         for (var empleado : EMPLEADOS) {
-            var suma = 0.0;
-
             System.out.println("ID: " + empleado.id);
             System.out.println("Coder: " + empleado.nombre);
             System.out.println("Calificaciones trimestrales: ");
@@ -229,11 +265,10 @@ public class ArquitecturaDinamica {
             // y calcular el promedio de desempeno de cada empleado.
             for (var j = 0; j < empleado.calificacionesTrimestrales.size(); j++) {
                 var calificacion = empleado.calificacionesTrimestrales.get(j);
-                suma += calificacion;
                 System.out.println("Trimestre " + (j + 1) + ": " + calificacion);
             }
 
-            var promedio = suma / empleado.calificacionesTrimestrales.size();
+            var promedio = calcularPromedio(empleado);
             // Casting explicito de double a int para generar un "Puntaje Simplificado".
             // Se pierde la parte decimal, por lo que disminuye la precision del valor original.
             var puntajeSimplificado = (int) promedio;
@@ -283,6 +318,7 @@ public class ArquitecturaDinamica {
                 // Menu corto de gestion para listar o eliminar registros existentes.
                 System.out.println("1. Listar coders");
                 System.out.println("2. Eliminar coder");
+                System.out.println("3. Filtrar por puntaje minimo");
                 System.out.print("Seleccione una opcion de gestion: ");
 
                 var opcionGestion = scanner.nextLine().trim();
@@ -291,6 +327,8 @@ public class ArquitecturaDinamica {
                     listarEmpleados();
                 } else if ("2".equals(opcionGestion)) {
                     eliminarEmpleado(scanner);
+                } else if ("3".equals(opcionGestion)) {
+                    depurarEmpleadosPorPuntajeMinimo(scanner);
                 } else {
                     System.out.println("Opcion de gestion no valida.");
                 }
