@@ -33,6 +33,19 @@ public class Perfiles {
         PersonaLegacy legado = new DemoLegacy("LEG-001", "Perfil abierto");
         System.out.println("=== Referencia Legacy (Java 8/11) ===");
         System.out.println(legado.resumen());
+        System.out.println();
+
+        DesempenoReportLegacy reporteLegacy = new DesempenoReportLegacy(
+            1,
+            4.6,
+            "Cumple objetivos del mes con seguimiento manual"
+        );
+        System.out.println("=== Sintaxis Legacy: POJO tradicional ===");
+        System.out.println(reporteLegacy);
+        System.out.println();
+
+        System.out.println("=== Fin de mes: reportes inmutables con record ===");
+        emitirReportesFinDeMes(personas).forEach(System.out::println);
     }
 
     public static String describirPerfil(Persona persona) {
@@ -69,6 +82,43 @@ public class Perfiles {
                 );
         };
     }
+
+    public static List<DesempeñoReport> emitirReportesFinDeMes(List<Persona> personas) {
+        return personas.stream()
+            .map(persona -> new DesempeñoReport(
+                extraerIdNumerico(persona.id()),
+                calcularPromedioDesempeno(persona),
+                generarFeedback(persona)
+            ))
+            .toList();
+    }
+
+    private static int extraerIdNumerico(String id) {
+        return Integer.parseInt(id.replaceAll("\\D", ""));
+    }
+
+    private static double calcularPromedioDesempeno(Persona persona) {
+        double promedio = switch (persona) {
+            case Desarrollador desarrollador -> Math.min(5.0, 4.1 + (desarrollador.tecnologias().size() * 0.2));
+            case Gerente gerente -> Math.min(5.0, 4.0 + (gerente.personasACargo() * 0.03));
+            case ConsultorExterno consultor -> consultor.especialidad().length() > 20 ? 4.7 : 4.4;
+        };
+        return Math.round(promedio * 100.0) / 100.0;
+    }
+
+    private static String generarFeedback(Persona persona) {
+        return switch (persona) {
+            case Desarrollador desarrollador ->
+                "Entrega continua destacada en " + desarrollador.area()
+                    + " con dominio de " + String.join(", ", desarrollador.tecnologias());
+            case Gerente gerente ->
+                "Liderazgo efectivo en " + gerente.unidadNegocio()
+                    + " con supervision de " + gerente.personasACargo() + " colaboradores";
+            case ConsultorExterno consultor ->
+                "Aporta conocimiento especializado en " + consultor.especialidad()
+                    + " para la firma " + consultor.empresaConsultora();
+        };
+    }
 }
 
 abstract class PersonaLegacy {
@@ -100,6 +150,39 @@ final class DemoLegacy extends PersonaLegacy {
     public String resumen() {
         return "Legacy -> " + getIdentificador() + " / " + getNombre()
             + " (cualquier clase podria extender PersonaLegacy sin restricciones)";
+    }
+}
+
+final class DesempenoReportLegacy {
+    private final int idEmpleado;
+    private final double promedio;
+    private final String feedback;
+
+    DesempenoReportLegacy(int idEmpleado, double promedio, String feedback) {
+        this.idEmpleado = idEmpleado;
+        this.promedio = promedio;
+        this.feedback = feedback;
+    }
+
+    public int getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public double getPromedio() {
+        return promedio;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    @Override
+    public String toString() {
+        return "DesempenoReportLegacy{"
+            + "idEmpleado=" + idEmpleado
+            + ", promedio=" + promedio
+            + ", feedback='" + feedback + '\''
+            + '}';
     }
 }
 
@@ -219,6 +302,20 @@ record DatosPersona(String id, String nombre, String correo) {
         }
         if (correo == null || correo.isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
+        }
+    }
+}
+
+record DesempeñoReport(int idEmpleado, double promedio, String feedback) {
+    DesempeñoReport {
+        if (idEmpleado <= 0) {
+            throw new IllegalArgumentException("El idEmpleado debe ser positivo");
+        }
+        if (promedio < 0 || promedio > 5) {
+            throw new IllegalArgumentException("El promedio debe estar entre 0 y 5");
+        }
+        if (feedback == null || feedback.isBlank()) {
+            throw new IllegalArgumentException("El feedback es obligatorio");
         }
     }
 }
