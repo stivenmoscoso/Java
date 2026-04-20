@@ -47,6 +47,16 @@ public class Perfiles {
         emitirReportesFinDeMes(personas).forEach(System.out::println);
         System.out.println();
 
+        System.out.println("=== Interfaces: bonos de ascenso + default log ===");
+        personas.stream()
+            .filter(Promocionable.class::isInstance)
+            .map(Promocionable.class::cast)
+            .forEach(promocionable -> {
+                System.out.println("Bono calculado: " + formatearMonto(promocionable.calcularBonoAscenso()));
+                System.out.println(promocionable.registrarLogPromocion());
+                System.out.println();
+            });
+
         System.out.println("=== Polimorfismo: validacion legacy vs pattern matching ===");
         personas.forEach(persona -> {
             System.out.println(validarPerfilLegacy(persona));
@@ -167,6 +177,16 @@ public class Perfiles {
     }
 }
 
+interface Promocionable {
+    double calcularBonoAscenso();
+
+    // Desde Java 8 una interfaz puede evolucionar con metodos default sin forzar
+    // cambios en todas las clases existentes que ya implementaban el contrato.
+    default String registrarLogPromocion() {
+        return "LOG -> bono de ascenso calculado para " + getClass().getSimpleName();
+    }
+}
+
 abstract class PersonaLegacy {
     private final String identificador;
     private final String nombre;
@@ -266,7 +286,7 @@ sealed abstract class Empleado extends Persona permits Desarrollador, Gerente {
     }
 }
 
-final class Desarrollador extends Empleado {
+final class Desarrollador extends Empleado implements Promocionable {
     private final String lenguajePrincipal;
 
     Desarrollador(DatosPersona datos, String lenguajePrincipal) {
@@ -287,9 +307,14 @@ final class Desarrollador extends Empleado {
     public double calcularCompensacionMensual() {
         return "java".equalsIgnoreCase(lenguajePrincipal) ? 7600 : 7000;
     }
+
+    @Override
+    public double calcularBonoAscenso() {
+        return "java".equalsIgnoreCase(lenguajePrincipal) ? 1800 : 1200;
+    }
 }
 
-final class Gerente extends Empleado {
+final class Gerente extends Empleado implements Promocionable {
     private final double presupuestoMensual;
 
     Gerente(DatosPersona datos, double presupuestoMensual) {
@@ -309,6 +334,11 @@ final class Gerente extends Empleado {
     @Override
     public double calcularCompensacionMensual() {
         return 9000 + (presupuestoMensual * 0.02);
+    }
+
+    @Override
+    public double calcularBonoAscenso() {
+        return presupuestoMensual * 0.05;
     }
 }
 
