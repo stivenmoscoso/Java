@@ -1,6 +1,7 @@
 package com.java;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Perfiles {
 
@@ -8,13 +9,11 @@ public class Perfiles {
         List<Persona> personas = List.of(
             new Desarrollador(
                 new DatosPersona("EMP-001", "Ana Torres", "ana@empresa.com"),
-                "Backend",
-                List.of("Java", "Spring", "SQL")
+                "Java"
             ),
             new Gerente(
                 new DatosPersona("EMP-002", "Luis Mejia", "luis@empresa.com"),
-                "Plataforma Digital",
-                12
+                125000.0
             ),
             new ConsultorExterno(
                 new DatosPersona("EXT-003", "Sofia Rojas", "sofia@consultora.com"),
@@ -26,7 +25,7 @@ public class Perfiles {
         System.out.println("=== Estilo Moderno: jerarquia sellada + records ===");
         personas.forEach(persona -> {
             System.out.println(describirPerfil(persona));
-            System.out.println("Compensacion estimada: " + persona.calcularCompensacionMensual());
+            System.out.println("Compensacion estimada: " + formatearMonto(persona.calcularCompensacionMensual()));
             System.out.println();
         });
 
@@ -46,6 +45,14 @@ public class Perfiles {
 
         System.out.println("=== Fin de mes: reportes inmutables con record ===");
         emitirReportesFinDeMes(personas).forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("=== Polimorfismo: validacion legacy vs pattern matching ===");
+        personas.forEach(persona -> {
+            System.out.println(validarPerfilLegacy(persona));
+            System.out.println(validarPerfilModerno(persona));
+            System.out.println();
+        });
     }
 
     public static String describirPerfil(Persona persona) {
@@ -53,22 +60,18 @@ public class Perfiles {
             case Desarrollador desarrollador -> """
                 Desarrollador:
                 - Nombre: %s
-                - Area: %s
-                - Stack: %s
+                - Lenguaje principal: %s
                 """.formatted(
                     desarrollador.nombre(),
-                    desarrollador.area(),
-                    String.join(", ", desarrollador.tecnologias())
+                    desarrollador.lenguajePrincipal()
                 );
             case Gerente gerente -> """
                 Gerente:
                 - Nombre: %s
-                - Unidad: %s
-                - Personas a cargo: %d
+                - Presupuesto mensual: %s
                 """.formatted(
                     gerente.nombre(),
-                    gerente.unidadNegocio(),
-                    gerente.personasACargo()
+                    formatearMonto(gerente.presupuestoMensual())
                 );
             case ConsultorExterno consultor -> """
                 Consultor Externo:
@@ -99,9 +102,12 @@ public class Perfiles {
 
     private static double calcularPromedioDesempeno(Persona persona) {
         double promedio = switch (persona) {
-            case Desarrollador desarrollador -> Math.min(5.0, 4.1 + (desarrollador.tecnologias().size() * 0.2));
-            case Gerente gerente -> Math.min(5.0, 4.0 + (gerente.personasACargo() * 0.03));
-            case ConsultorExterno consultor -> consultor.especialidad().length() > 20 ? 4.7 : 4.4;
+            case Desarrollador desarrollador ->
+                desarrollador.lenguajePrincipal().equalsIgnoreCase("java") ? 4.8 : 4.5;
+            case Gerente gerente ->
+                gerente.presupuestoMensual() >= 100000 ? 4.7 : 4.3;
+            case ConsultorExterno consultor ->
+                consultor.especialidad().length() > 20 ? 4.7 : 4.4;
         };
         return Math.round(promedio * 100.0) / 100.0;
     }
@@ -109,15 +115,55 @@ public class Perfiles {
     private static String generarFeedback(Persona persona) {
         return switch (persona) {
             case Desarrollador desarrollador ->
-                "Entrega continua destacada en " + desarrollador.area()
-                    + " con dominio de " + String.join(", ", desarrollador.tecnologias());
+                "Mantiene un desempeno consistente trabajando con "
+                    + desarrollador.lenguajePrincipal();
             case Gerente gerente ->
-                "Liderazgo efectivo en " + gerente.unidadNegocio()
-                    + " con supervision de " + gerente.personasACargo() + " colaboradores";
+                "Gestiona un presupuesto mensual de "
+                    + formatearMonto(gerente.presupuestoMensual()) + " con liderazgo estable";
             case ConsultorExterno consultor ->
                 "Aporta conocimiento especializado en " + consultor.especialidad()
                     + " para la firma " + consultor.empresaConsultora();
         };
+    }
+
+    public static String validarPerfilLegacy(Persona persona) {
+        // Java 8/11: el flujo clasico obliga a validar con instanceof
+        // y luego repetir un cast manual para poder usar el comportamiento concreto.
+        if (persona instanceof Desarrollador) {
+            Desarrollador desarrollador = (Desarrollador) persona;
+            return "Legacy -> " + desarrollador.nombre()
+                + " desarrolla principalmente en " + desarrollador.getLenguaje();
+        }
+
+        // El mismo patron repetitivo aparece para cada subtipo concreto.
+        if (persona instanceof Gerente) {
+            Gerente gerente = (Gerente) persona;
+            return "Legacy -> " + gerente.nombre()
+                + " administra un presupuesto de " + formatearMonto(gerente.getPresupuestoMensual());
+        }
+
+        return "Legacy -> perfil sin reglas de validacion especificas";
+    }
+
+    public static String validarPerfilModerno(Persona persona) {
+        // Java 17/21: Pattern Matching for instanceof une comprobacion
+        // y variable tipada en una sola expresion, con menos ruido y menos casts.
+        if (persona instanceof Desarrollador desarrollador) {
+            return "Moderno -> " + desarrollador.nombre()
+                + " desarrolla principalmente en " + desarrollador.lenguajePrincipal();
+        }
+
+        // El codigo queda mas directo porque la variable ya llega con el tipo correcto.
+        if (persona instanceof Gerente gerente) {
+            return "Moderno -> " + gerente.nombre()
+                + " administra un presupuesto de " + formatearMonto(gerente.presupuestoMensual());
+        }
+
+        return "Moderno -> perfil sin reglas de validacion especificas";
+    }
+
+    private static String formatearMonto(double valor) {
+        return String.format(Locale.US, "$%,.2f", valor);
     }
 }
 
@@ -190,7 +236,7 @@ final class DesempenoReportLegacy {
  * Sealed Classes protegen mejor la API porque el dominio define de forma explicita
  * quienes pueden heredar. A diferencia de una jerarquia abierta de Java 8/11,
  * esto evita extensiones inesperadas, hace el modelo mas predecible para reglas
- * de negocio y permite al compilador validar exhaustividad en switch/pattern matching.
+ * de negocio y permite al compilador validar exhaustividad en switch y pattern matching.
  */
 sealed abstract class Persona permits Empleado, ConsultorExterno {
     private final DatosPersona datos;
@@ -221,50 +267,48 @@ sealed abstract class Empleado extends Persona permits Desarrollador, Gerente {
 }
 
 final class Desarrollador extends Empleado {
-    private final String area;
-    private final List<String> tecnologias;
+    private final String lenguajePrincipal;
 
-    Desarrollador(DatosPersona datos, String area, List<String> tecnologias) {
+    Desarrollador(DatosPersona datos, String lenguajePrincipal) {
         super(datos);
-        this.area = area;
-        this.tecnologias = List.copyOf(tecnologias);
+        this.lenguajePrincipal = lenguajePrincipal;
     }
 
-    public String area() {
-        return area;
+    public String lenguajePrincipal() {
+        return lenguajePrincipal;
     }
 
-    public List<String> tecnologias() {
-        return tecnologias;
+    // Getter estilo JavaBean para contrastar con el acceso moderno via pattern matching.
+    public String getLenguaje() {
+        return lenguajePrincipal;
     }
 
     @Override
     public double calcularCompensacionMensual() {
-        return 6500 + (tecnologias.size() * 350);
+        return "java".equalsIgnoreCase(lenguajePrincipal) ? 7600 : 7000;
     }
 }
 
 final class Gerente extends Empleado {
-    private final String unidadNegocio;
-    private final int personasACargo;
+    private final double presupuestoMensual;
 
-    Gerente(DatosPersona datos, String unidadNegocio, int personasACargo) {
+    Gerente(DatosPersona datos, double presupuestoMensual) {
         super(datos);
-        this.unidadNegocio = unidadNegocio;
-        this.personasACargo = personasACargo;
+        this.presupuestoMensual = presupuestoMensual;
     }
 
-    public String unidadNegocio() {
-        return unidadNegocio;
+    public double presupuestoMensual() {
+        return presupuestoMensual;
     }
 
-    public int personasACargo() {
-        return personasACargo;
+    // Getter legacy para ilustrar el cast manual del enfoque Java 8/11.
+    public double getPresupuestoMensual() {
+        return presupuestoMensual;
     }
 
     @Override
     public double calcularCompensacionMensual() {
-        return 9000 + (personasACargo * 180);
+        return 9000 + (presupuestoMensual * 0.02);
     }
 }
 
