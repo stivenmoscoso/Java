@@ -1,0 +1,24 @@
+.env
+HOTELNOVA_DB_URL=jdbc:postgresql://aws-1-us-west-2.pooler.supabase.com:6543/postgres?sslmode=require
+HOTELNOVA_DB_USER=postgres.gonruweinqixlanufmhz
+HOTELNOVA_DB_PASSWORD=Stivenmoscoso1
+
+
+
+
+db.url=jdbc:postgresql://db.gonruweinqixlanufmhz.supabase.co:5432/postgres?sslmode=require
+
+
+db.user=postgres
+db.password=YOUR_PASSWORD_HERE
+db.driver=org.postgresql.Driver
+
+# Parámetros de negocio
+horaCheckIn=15
+horaCheckOut=12
+iva=0.19
+
+
+# Rutas
+export.dir=exports/
+log.file=app.log
