@@ -34,6 +34,23 @@ public final class JdbcEmpleadoDAO implements EmpleadoDAO {
         WHERE id = ?
         """;
 
+    private static final String REPORT_SQL = """
+        SELECT
+            id,
+            nombre,
+            correo,
+            lenguaje_principal,
+            salario_mensual,
+            CASE
+                WHEN salario_mensual >= 9000 THEN 'Senior'
+                WHEN salario_mensual >= 7000 THEN 'Mid'
+                ELSE 'Junior'
+            END AS categoria_salarial,
+            UPPER(SUBSTRING(nombre, 1, 3)) || '-' || id AS alias_corporativo
+        FROM coders
+        ORDER BY salario_mensual DESC, nombre ASC
+        """;
+
     private static final String UPDATE_SQL = """
         UPDATE coders
         SET nombre = ?, correo = ?, lenguaje_principal = ?, salario_mensual = ?
@@ -111,6 +128,33 @@ public final class JdbcEmpleadoDAO implements EmpleadoDAO {
                 return resultSet.next() ? mapearEmpleado(resultSet) : null;
             }
         }
+    }
+
+    @Override
+    public List<EmpleadoReporte> generarReporte() throws SQLException {
+        List<EmpleadoReporte> reporte = new ArrayList<>();
+
+        try (
+            Connection connection = JdbcConnectionManager.openConnection(config);
+            PreparedStatement statement = connection.prepareStatement(REPORT_SQL);
+            ResultSet resultSet = statement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                // La consulta agrega columnas derivadas y el record permite mapearlas
+                // de forma compacta sin crear un POJO mutable adicional solo para lectura.
+                reporte.add(new EmpleadoReporte(
+                    resultSet.getInt("id"),
+                    resultSet.getString("nombre"),
+                    resultSet.getString("correo"),
+                    resultSet.getString("lenguaje_principal"),
+                    resultSet.getDouble("salario_mensual"),
+                    resultSet.getString("categoria_salarial"),
+                    resultSet.getString("alias_corporativo")
+                ));
+            }
+        }
+
+        return reporte;
     }
 
     @Override

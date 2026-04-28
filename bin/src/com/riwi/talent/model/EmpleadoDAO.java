@@ -15,6 +15,8 @@ public interface EmpleadoDAO {
 
     Empleado buscarPorId(int id) throws SQLException;
 
+    List<EmpleadoReporte> generarReporte() throws SQLException;
+
     boolean actualizar(Empleado empleado) throws SQLException;
 
     boolean eliminar(int id) throws SQLException;

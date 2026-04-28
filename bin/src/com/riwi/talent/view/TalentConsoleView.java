@@ -58,6 +58,10 @@ public final class TalentConsoleView {
                 buscarEmpleadoPorId();
                 yield true;
             }
+            case "6" -> {
+                mostrarReporteFinal();
+                yield true;
+            }
             case "0" -> false;
             default -> {
                 System.out.println("Opcion invalida. Intenta nuevamente.");
@@ -74,6 +78,7 @@ public final class TalentConsoleView {
         System.out.println("3. Actualizar coder");
         System.out.println("4. Eliminar coder");
         System.out.println("5. Buscar coder por id");
+        System.out.println("6. Generar reporte final");
         System.out.println("0. Salir");
         System.out.print("Selecciona una opcion: ");
     }
@@ -121,6 +126,10 @@ public final class TalentConsoleView {
         int id = leerEntero("Id del coder a buscar");
         Empleado empleado = controller.buscarEmpleadoPorId(id);
         System.out.println(empleado != null ? formatearEmpleado(empleado) : "No se encontro el coder.");
+    }
+
+    private void mostrarReporteFinal() throws SQLException {
+        System.out.println(controller.generarReporteFinal());
     }
 
     private String leerTexto(String etiqueta) {
