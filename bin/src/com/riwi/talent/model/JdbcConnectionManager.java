@@ -1,4 +1,4 @@
-package com.java;
+package com.riwi.talent.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

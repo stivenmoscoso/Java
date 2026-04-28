@@ -1,4 +1,4 @@
-package com.java;
+package com.riwi.talent.model;
 
 import java.sql.SQLException;
 import java.util.List;

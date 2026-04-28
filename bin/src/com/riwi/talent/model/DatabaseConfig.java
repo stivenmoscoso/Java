@@ -1,4 +1,4 @@
-package com.java;
+package com.riwi.talent.model;
 
 /**
  * Record inmutable para transportar la configuracion de conexion.

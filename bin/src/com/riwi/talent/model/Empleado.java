@@ -1,4 +1,4 @@
-package com.java;
+package com.riwi.talent.model;
 
 /**
  * Record inmutable que representa al empleado persistido en la tabla coders.
