@@ -1,5 +1,7 @@
 package com.riwi.talent.model;
 
+import java.util.Map;
+
 /**
  * Record inmutable para transportar la configuracion de conexion.
  * En MVC este tipo de dato puede viajar del controlador al modelo sin exponer
@@ -20,23 +22,40 @@ public record DatabaseConfig(String url, String usuario, String password) {
     }
 
     public static DatabaseConfig fromEnvironment() {
-        String url = leerPrimeroNoVacio(System.getProperty("db.url"), System.getenv("DB_URL"));
-        String usuario = leerPrimeroNoVacio(System.getProperty("db.user"), System.getenv("DB_USER"));
-        String password = leerPrimeroNoNulo(System.getProperty("db.password"), System.getenv("DB_PASSWORD"));
+        Map<String, String> envFile = EnvFileLoader.load(".env");
+        String url = leerPrimeroNoVacio(
+            System.getProperty("db.url"),
+            System.getenv("DB_URL"),
+            envFile.get("DB_URL")
+        );
+        String usuario = leerPrimeroNoVacio(
+            System.getProperty("db.user"),
+            System.getenv("DB_USER"),
+            envFile.get("DB_USER")
+        );
+        String password = leerPrimeroNoNulo(
+            System.getProperty("db.password"),
+            System.getenv("DB_PASSWORD"),
+            envFile.get("DB_PASSWORD")
+        );
         return new DatabaseConfig(url, usuario, password);
     }
 
-    private static String leerPrimeroNoVacio(String primero, String segundo) {
-        if (primero != null && !primero.isBlank()) {
-            return primero;
-        }
-        if (segundo != null && !segundo.isBlank()) {
-            return segundo;
+    private static String leerPrimeroNoVacio(String... candidatos) {
+        for (String candidato : candidatos) {
+            if (candidato != null && !candidato.isBlank()) {
+                return candidato;
+            }
         }
         return null;
     }
 
-    private static String leerPrimeroNoNulo(String primero, String segundo) {
-        return primero != null ? primero : segundo;
+    private static String leerPrimeroNoNulo(String... candidatos) {
+        for (String candidato : candidatos) {
+            if (candidato != null) {
+                return candidato;
+            }
+        }
+        return null;
     }
 }
